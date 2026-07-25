@@ -1,2 +1,1044 @@
 # siemens-rapidminer-slc-chapter-II-txscatter-three-dimensional-ascii-text-scatter-plot
 Siemens RapidMiner SLC chapter II txscatter three dimensional ascii text scatter plot
+	%let pgm=siemens-rapidminer-slc-chapter-II-txscatter-three-dimensional-ascii-text-scatter-plot;
+
+	%stop_submission;
+
+	Siemens RapidMiner SLC chapter II txscatter three-dimensional ASCII text scatter plot
+
+	Too long to post: see
+	https://github.com/rogerjdeangelis/siemens-rapidminer-slc-chapter-II-txscatter-three-dimensional-ascii-text-scatter-plot
+
+	NOTE: A major by-product is wrapping R in an SLC macro and exchanging macro variables wit R.
+	SLC R macro, txscatter, imitates slc proc plot
+
+	Because this solution uses utf-8 encoding your SLC editor should use utf-8 encoding.
+	I use UltraEdit editor with utf-8 encoding.
+
+	CONTENTS
+
+	  1 input
+	  2 SLC proc plot
+	  3 R documentation on plot size
+	  4 R SLC txscatter macro
+		  This macro provides a 3d text scatter plot and png plot
+		  The ascii text plot is easily annotated
+	  5 R SLC macro txscatter on end and in
+		  https://github.com/rogerjdeangelis/utl-macros-used-in-many-of-rogerjdeangelis-repositories
+	  6 R submit macro
+
+	In the spirit of John Tukey, get close to your data, observe it carefully, and document what you see.
+	Text graphics are powerful because they allow ggplot to render plots in text.
+	Manually refining those text graphics brings you even closer to the data,
+	helping surface patterns and insights that might otherwise be missed.
+
+	see
+	https://github.com/cheuerde/plotcli
+
+	RELATED REPOS
+
+	https://github.com/rogerjdeangelis/altair-slc-requested-line-printer-three-and-four-dimensional-line-printer-plot-support
+	https://github.com/rogerjdeangelis/siemens-rapidminer-slc-chapter-I-terminal-ascii-fixed-font-contour-plots-r-nostalgir-package
+	https://github.com/rogerjdeangelis/utl-annotating-sas-ascii-line-printer-plots
+	https://github.com/rogerjdeangelis/utl-ascii-art-outline-maps-of-states-and-countries-AI
+	https://github.com/rogerjdeangelis/utl-ascii-line-maps-of-the-usa-and-each-state
+	https://github.com/rogerjdeangelis/utl-ascii-line-plot-more-flexible-than-sas-sgplot-and-a-more-powerfull-graphics-editor
+	https://github.com/rogerjdeangelis/utl-bare-bones-ascii-line-meta-data-forest-plot-for-exploring-relation-ship
+	https://github.com/rogerjdeangelis/utl-classic-sas-and-well-designed-tables-and-ascii-graphics-instead-of-bling
+	https://github.com/rogerjdeangelis/utl-creating-stacked-ascii-line-bar-plots-and-sas-sgplots-and-r-ggplot2
+	https://github.com/rogerjdeangelis/utl-enhanced-ascii-graphics-side-by-side-hstograms-with-counts-using-sas-functions-in-formats
+	https://github.com/rogerjdeangelis/utl-fun-diversion-create-a-teepee-ascii-plot-or-fast-interpolation-in-r
+	https://github.com/rogerjdeangelis/utl-fun-with-ascii-line-plots-cartoon-character-mickey-mouse
+	https://github.com/rogerjdeangelis/utl-greatly-underrated-ascii-graphics-visualizing-cross-tabulations
+	https://github.com/rogerjdeangelis/utl-in-the-spirit-of-John-Tukey-a-useful-ascii-plot-of-percentages-proc-plot
+	https://github.com/rogerjdeangelis/utl-label-points-on-a-scatter-plot-with-student-names-r-ggplot-sas-sg-and-ascii-plots
+	https://github.com/rogerjdeangelis/utl-posting-your-problem-with-an-ascii-image-that-looks-just-like-an-excel-shee
+	https://github.com/rogerjdeangelis/utl-simple-ascii-plot-to-visually-display-the-the-overlap-of-two-time-series-proc-plot-graph
+	https://github.com/rogerjdeangelis/utl-under-used-proc-calendar-ascii-graphics
+	https://github.com/rogerjdeangelis/utl-wps-r-interpolating-yearly-average-artic-temperatures-and-wps-ascii-line-plots
+	https://github.com/rogerjdeangelis/utl_graphics_flexibility_of_ascii_bar_charts
+	https://github.com/rogerjdeangelis/utl_using_google_tesseract_and_sas_to_convert_bmp_formatted_picture_christmas_trees_to_ascii_txt
+
+
+		  ==========
+		  SLC OUTPUT
+		  ==========
+					  R Version Plot of Height * Weight = Sex and Age
+						Overlapping  characters have been removed
+						I could not get R nudging to work
+
+				 In the sprit of John Tukey, get close to your data my
+				 observing and documenting what you see.
+				 Get you hands on the data
+
+				 Plot of Height * Weight = Sex and Age
+
+				 Analysis: Females tend to weigh less than Males
+
+										WEIGHT
+			   40       60       80       100      120      140      160
+			  --+--------+--------+--------+--------+--------+--------+---
+			  |                            |                             |
+			  | PLOT xyz hgt*wgt=sexage  Median                          |
+		   75 +                           Weignt    +---------+          + 75
+			  | hgt  wgt sexage            |        | Mostly  |          |
+			  | 69  112   M14              |        | Males6/3|          |
+			  | 56   84   F13              |        +---------+          |
+			  | 65   98   F13              |   M14                * M16  |
+			  | 62  102   F14              |                             |
+		   70 + 63  102   M14              |                             + 70
+			  | 57   83   M12              |    * M14                    |
+			  | 59   84   F12              |                             |
+		 H    | 62  112   F15              |                             |     H
+		 E    | 62   84   M13              |              * M15          |     E
+		 I    | 59   99   M12              |M15 * F15                    |     I
+		 G 65 + 51   50   F11             *|F13                          + 65  G
+		 H    | 64   90   F14          * F14            * M12            |     H
+		 T    | 56   77   F12              |* M14                        |     T
+			  | 66  112   F15              F14                           |
+			  |-72---50---M16--- ---*-M13--+*---*-F15--------------------|
+			  | 64  128   M12              |                             |
+		   60 + 67  133   M15              |                             + 60
+			  | 57   85   M11       * F12  * M12                         |
+			  | 66  112   M15              |                             |
+			  |                            |                             |
+			  |                M12 ** M11  |                             |
+			  |              F12 *  * F13  |                             |
+		   55 + +-----------+              |                             + 55
+			  | | Mostly    |              |                             |
+			  | |Females 6/3|              |                             |
+			  | +-----------+              |                             |
+			  |                            |                             |
+			  |      * F11                 |                             |
+		   50 +                            |                             + 50
+			  |                            |                             |
+			  --+--------+--------+--------+--------+--------+--------+---
+			   40       60       80       100      120      140      160
+											WEIGHT
+
+		 ==========================
+		 R WITH SLC MACRO TXSCATTER
+		 ==========================
+
+		 %txscatter(
+		   inp=d:/wpswrkx/have.sas7bdat
+		   ,x=wgt
+		   ,y=hgt
+		   ,z=sexage
+		   ,width=5   /*--- inches viewed in notepad courier new 8pt ---*/
+		   ,height=5  /*--- inches viewed in notepad courier new 8pt ---*/
+		   ,png=d:/png/image.png  /*--- leave off for no png plot    ---*/
+		   ,resolve=Y
+		   ,return=status
+		   );
+											  WEIGHT
+					60.0     80.0       100      120      140
+			   +--------------------------------------------------+
+		 H     ¦ PLOT xyz hgt*wgt=sexage ¦                        ¦   H
+		 E     ¦                       Median                     ¦   E
+		 I     ¦ hgt  wgt sexage       Weight   Symbol is Sex-Age ¦   I
+		 G     ¦ 69  112   M14           ¦                        ¦   G
+		 H     ¦ 56   84   F13           ¦                        ¦   H
+		 T     ¦ 65   98   F13           |       +---------+      ¦   T
+			   ¦ 62  102   F14           |       | Mostly  |   M16¦
+			70 + 63  102   M14           +       | Males6/3|      + 70
+			   ¦ 57   83   M12           ¦       +---------+      ¦
+			   ¦ 59   84   F12           ¦     M14                ¦
+			   ¦ 62  112   F15           ¦                        ¦
+			   ¦ 62   84   M13           ¦              M15       ¦
+			   ¦ 59   99   M12           ¦     M15                ¦
+			65 + 51   50   F11         F13                        + 65
+			   ¦ 64   90   F14      F14  ¦           M12          ¦
+			   ¦ 56   77   F12           ¦M14                     ¦
+		 H     ¦ 66--112---F15--- M13----¦F14--F15----------------¦    H
+		 E     ¦ 72  150   M16           ¦                        ¦    E
+		 I     ¦ 64  128   M12           ¦                        ¦    I
+		 G  60 + 67  133   M15    F12   M12                       + 60 G
+		 H     ¦ 57   85   M11           ¦                        ¦    H
+		 T     ¦ 66  112   M15           ¦                        ¦    T
+			   ¦                  M11    ¦                        ¦
+			   ¦               F12 F13   ¦                        ¦
+			55 +        +-----------+    +                        + 55
+			   ¦        | Mostly    |    ¦                        ¦
+			   ¦        |Females 6/3|    ¦                        ¦
+			   ¦        +-----------+    ¦                        ¦
+			   ¦   F11                 Median                     ¦
+			   ¦                       Weight                     ¦
+			50 +--------------------------------------------------+ 50
+					60.0     80.0       100      120      140
+									   WEIGHT
+
+	/*   _                   _
+	/ | (_)_ __  _ __  _   _| |_
+	| | | | `_ \| `_ \| | | | __|
+	| | | | | | | |_) | |_| | |_
+	|_| |_|_| |_| .__/ \__,_|\__|
+				|_|
+	*/
+
+	libname workx sas7bdat "d:/wpswrkx";
+
+	proc datasets lib=workx kill;
+	run;
+
+	options validvarname=v7;
+	data workx.have;
+	input
+	   hgt wgt sexage $3.;
+	cards4;
+	69 112 M14
+	56 84 F13
+	65 98 F13
+	62 102 F14
+	63 102 M14
+	57 83 M12
+	59 84 F12
+	62 112 F15
+	62 84 M13
+	59 99 M12
+	51 50 F11
+	64 90 F14
+	56 77 F12
+	66 112 F15
+	72 150 M16
+	64 128 M12
+	67 133 M15
+	57 85 M11
+	66 112 M15
+	;;;;
+	run;quit;
+
+	/**************************************************************************************************************************/
+	/*  WORKX.HAVE total obs=19 20JUL2026:10:48:11                                                                            */
+	/*                                                                                                                        */
+	/* Obs    hgt    wgt    sexag                                                                                             */
+	/*                                                                                                                        */
+	/*   1     69    112     M14                                                                                              */
+	/*   2     56     84     F13                                                                                              */
+	/*   3     65     98     F13                                                                                              */
+	/*   4     62    102     F14                                                                                              */
+	/*   5     63    102     M14                                                                                              */
+	/*   6     57     83     M12                                                                                              */
+	/*   7     59     84     F12                                                                                              */
+	/*   8     62    112     F15                                                                                              */
+	/*   9     62     84     M13                                                                                              */
+	/*  10     59     99     M12                                                                                              */
+	/*  11     51     50     F11                                                                                              */
+	/*  12     64     90     F14                                                                                              */
+	/*  13     56     77     F12                                                                                              */
+	/*  14     66    112     F15                                                                                              */
+	/*  15     72    150     M16                                                                                              */
+	/*  16     64    128     M12                                                                                              */
+	/*  17     67    133     M15                                                                                              */
+	/*  18     57     85     M11                                                                                              */
+	/*  19     66    112     M15                                                                                              */
+	/**************************************************************************************************************************/
+
+	/*
+	| | ___   __ _
+	| |/ _ \ / _` |
+	| | (_) | (_| |
+	|_|\___/ \__, |
+			 |___/
+	*/
+	1                                          Altair SLC          07:42 Tuesday, July 21, 2026
+
+	NOTE: Copyright 2002-2025 World Programming, an Altair Company
+	NOTE: Altair SLC 2026 (05.26.01.00.000758)
+		  Licensed to Roger DeAngelis
+	NOTE: This session is executing on the X64_WIN11PRO platform and is running in 64 bit mode
+
+	NOTE: AUTOEXEC processing beginning; file is C:\wpsoto\autoexec.sas
+
+	NOTE: AUTOEXEC processing completed
+
+	1         libname workx sas7bdat "d:/wpswrkx";
+	NOTE: Library workx assigned as follows:
+		  Engine:        SAS7BDAT
+		  Physical Name: d:\wpswrkx
+
+
+	Altair SLC
+
+	The DATASETS Procedure
+
+			 Directory
+
+	Libref           WORKX
+	Engine           SAS7BDAT
+	Physical Name    d:\wpswrkx
+	2
+	3         proc datasets lib=workx kill;
+	NOTE: No matching members in directory
+	4         run;
+	5
+	6         options validvarname=v7;
+	NOTE: Procedure datasets step took :
+		  real time : 0.032
+		  cpu time  : 0.000
+
+
+	7         data workx.have;
+	8         input
+	9            hgt wgt sexage $3.;
+	10        cards4;
+
+	NOTE: Data set "WORKX.have" has 19 observation(s) and 3 variable(s)
+	NOTE: The data step took :
+		  real time : 0.000
+		  cpu time  : 0.015
+
+
+	11        69 112 M14
+	12        56 84 F13
+	13        65 98 F13
+	14        62 102 F14
+	15        63 102 M14
+	16        57 83 M12
+	17        59 84 F12
+	18        62 112 F15
+	19        62 84 M13
+	20        59 99 M12
+	21        51 50 F11
+	22        64 90 F14
+	23        56 77 F12
+	24        66 112 F15
+	25        72 150 M16
+	26        64 128 M12
+	27        67 133 M15
+	28        57 85 M11
+	29        66 112 M15
+	30        ;;;;
+	31        run;quit;
+
+	NOTE: Submitted statements took :
+		  real time : 1.046
+		  cpu time  : 0.125
+
+	/*___        _              _       _
+	|___ \   ___| | ___   _ __ | | ___ | |_
+	  __) | / __| |/ __| | `_ \| |/ _ \| __|
+	 / __/  \__ \ | (__  | |_) | | (_) | |_
+	|_____| |___/_|\___| | .__/|_|\___/ \__|
+						 |_|
+	*/
+
+	options ls=64 ps=44;
+	proc plot data=workx.have;
+	  plot hgt*wgt="*" $ sexage  /box
+	  vref=62
+	  href=100
+	  vaxis= 50 to 75 by 5
+	  ;
+	run;
+	options ls=255 ps=255;
+
+	/**************************************************************************************************************************/
+	/*             Plot of hgt*wgt$sexage.  Symbol used is '*'.                                                               */
+	/*                                                                                                                        */
+	/*      --+--------+--------+--------+--------+--------+--------+---                                                      */
+	/*  hgt |                            |                             |                                                      */
+	/*      |                            |                             |                                                      */
+	/*   75 +                            |                             +                                                      */
+	/*      |                            |                             |                                                      */
+	/*      |                            |                             |                                                      */
+	/*      |                            |                             |                                                      */
+	/*      |                            |                      * M16  |                                                      */
+	/*      |                            |                             |                                                      */
+	/*   70 +                            |                             +                                                      */
+	/*      |                            |    * M14                    |                                                      */
+	/*      |                            |                             |                                                      */
+	/*      |                            |                             |                                                      */
+	/*      |                            |              * M15          |                                                      */
+	/*      |                            |M15 * F15                    |                                                      */
+	/*   65 +                           *|F13                          +                                                      */
+	/*      |                        * F14            * M12            |                                                      */
+	/*      |                            |* M14                        |                                                      */
+	/*      |                            F14                           |                                                      */
+	/*      |---------------------*-M13--+*---*-F15--------------------|                                                      */
+	/*      |                            |                             |                                                      */
+	/*   60 +                            |                             +                                                      */
+	/*      |                     * F12  * M12                         |                                                      */
+	/*      |                            |                             |                                                      */
+	/*      |                            |                             |                                                      */
+	/*      |                M12 ** M11  |                             |                                                      */
+	/*      |              F12 *  * F13  |                             |                                                      */
+	/*   55 +                            |                             +                                                      */
+	/*      |                            |                             |                                                      */
+	/*      |                            |                             |                                                      */
+	/*      |                            |                             |                                                      */
+	/*      |                            |                             |                                                      */
+	/*      |      * F11                 |                             |                                                      */
+	/*   50 +                            |                             +                                                      */
+	/*      |                            |                             |                                                      */
+	/*      --+--------+--------+--------+--------+--------+--------+---                                                      */
+	/*       40       60       80       100      120      140      160                                                        */
+	/*                                                                                                                        */
+	/*                                  wgt                                                                                   */
+	/*                                                                                                                        */
+	/*            Plot of hgt*wgt$sexage.  Symbol used is '*'.                                                                */
+	/*                                                                                                                        */
+	/*       40       60       80       100      120      140      160                                                        */
+	/*      --+--------+--------+--------+--------+--------+--------+---                                                      */
+	/*  hgt |                            |                             | hgt                                                  */
+	/*      | PLOT xyz hgt*wgt=sexage  Median                          |                                                      */
+	/*   75 +                           Weignt    +---------+          + 75                                                   */
+	/*      | hgt  wgt sexage            |        | Mostly  |          |                                                      */
+	/*      | 69  112   M14              |        | Males6/3|          |                                                      */
+	/*      | 56   84   F13              |        +---------+          |                                                      */
+	/*      | 65   98   F13              |   M14                * M16  |                                                      */
+	/*      | 62  102   F14              |                             |                                                      */
+	/*   70 + 63  102   M14              |                             + 70                                                   */
+	/*      | 57   83   M12              |    * M14                    |                                                      */
+	/*      | 59   84   F12              |                             |                                                      */
+	/*      | 62  112   F15              |                             |                                                      */
+	/*      | 62   84   M13              |              * M15          |                                                      */
+	/*      | 59   99   M12              |M15 * F15                    |                                                      */
+	/*   65 + 51   50   F11             *|F13                          + 65                                                   */
+	/*      | 64   90   F14          * F14            * M12            |                                                      */
+	/*      | 56   77   F12              |* M14                        |                                                      */
+	/*      | 66  112   F15              F14                           |                                                      */
+	/*      |-72---50---M16--- ---*-M13--+*---*-F15--------------------|                                                      */
+	/*      | 64  128   M12              |                             |                                                      */
+	/*   60 + 67  133   M15              |                             + 60                                                   */
+	/*      | 57   85   M11       * F12  * M12                         |                                                      */
+	/*      | 66  112   M15              |                             |                                                      */
+	/*      |                            |                             |                                                      */
+	/*      |                M12 ** M11  |                             |                                                      */
+	/*      |              F12 *  * F13  |                             |                                                      */
+	/*   55 + +-----------+              |                             + 55                                                   */
+	/*      | | Mostly    |              |                             |                                                      */
+	/*      | |Females 6/3|              |                             |                                                      */
+	/*      | +-----------+              |                             |                                                      */
+	/*      |                            |                             |                                                      */
+	/*      |      * F11                 |                             |                                                      */
+	/*   50 +                            |                             + 50                                                   */
+	/*      |                            |                             |                                                      */
+	/*      --+--------+--------+--------+--------+--------+--------+---                                                      */
+	/*       40       60       80       100      120      140      160                                                        */
+	/*                                                                                                                        */
+	/*                                  wgt                                                                                   */
+	/**************************************************************************************************************************/
+
+	/*
+	| | ___   __ _
+	| |/ _ \ / _` |
+	| | (_) | (_| |
+	|_|\___/ \__, |
+			 |___/
+	*/
+	1                                          Altair SLC        14:38 Wednesday, July 22, 2026
+
+	NOTE: Copyright 2002-2025 World Programming, an Altair Company
+	NOTE: Altair SLC 2026 (05.26.01.00.000758)
+		  Licensed to Roger DeAngelis
+	NOTE: This session is executing on the X64_WIN11PRO platform and is running in 64 bit mode
+
+	NOTE: AUTOEXEC processing beginning; file is C:\wpsoto\autoexec.sas
+
+	NOTE: AUTOEXEC processing completed
+
+	1         options ls=64 ps=44;
+	2         proc plot data=workx.have;
+	3           plot hgt*wgt="*" $ sexage  /box
+	4           vref=62
+	5           href=100
+	6           vaxis= 50 to 75 by 5
+
+	2                          Altair SLC
+
+	7           ;
+	8         run;
+	NOTE: Procedure plot step took :
+		  real time : 0.035
+		  cpu time  : 0.000
+
+
+	9         options ls=255 ps=255;
+
+	NOTE: Submitted statements took :
+		  real time : 1.050
+		  cpu time  : 0.171
+
+	/*____              _                                  _       _        _
+	|___ /   _ __    __| | ___   ___    ___  _ __    _ __ | | ___ | |_  ___(_)_______
+	  |_ \  | `__|  / _` |/ _ \ / __|  / _ \| `_ \  | `_ \| |/ _ \| __|/ __| |_  / _ \
+	 ___) | | |    | (_| | (_) | (__  | (_) | | | | | |_) | | (_) | |_ \__ \ |/ /  __/
+	|____/  |_|     \__,_|\___/ \___|  \___/|_| |_| | .__/|_|\___/ \__||___/_/___\___|
+													|_|
+	*/
+
+	Make sure your slc editor is using utf-8 encoding!
+	All height and width arguments in this repo are optimized for
+	courier new 8pt in windows 11 notepad. You do not specify Courier New or 8pt anywhere.
+	Courier plts can be viewed with other fixed fonts and sizes.
+	Plots support ascii, block amd braille(hi res plots).
+	This repo xonverts block(encoding) to ascii because ascii character set is too limited and
+	braille requires utf-8 encoding. Your SLC editor should support utf-8.
+
+	Here is the size of
+
+	  contour args             Fixed Font 8pt  Courier New 8pt
+	  heightt    width         xaxis           yaxis
+	   x pts     y pts         length(in)      length(in)
+
+		40         20          3.25 in         3.25in
+		60         30          5.25 in         5.25in
+		90         45          8.25 in         8.25in
+
+		90         60          8.25 in         11.25in
+	   120         45          11.25in         8.25in
+
+	To convert inches to points (exact formulae)
+
+	  x inches to pts pts= 7.5 + 10*inches
+	  y inches to pts pts= 3.75 + 5*inches
+
+	/*--- create png plot                ---*/
+	p <- ggplot(data = dfsas, aes(x = weight, y = height, label = sex)) +
+	  geom_point(color = "steelblue", size = 3, shape = 46) +
+	  geom_text(vjust = -0.8, size = 3, check_overlap = TRUE) +
+	  theme_bw()
+
+	/*--- convert ong plot to text plot  ---*/
+	ggplotcli(
+	  p
+	 ,width =60
+	 ,height = 30
+	 ,canvas_type = "block"
+	 )
+
+	/*  _            _                      _   _
+	| || |    _ __  | |___  _____  ___ __ _| |_| |_ ___ _ __  _ __ ___   __ _  ___ _ __ ___
+	| || |_  | `__| | __\ \/ / __|/ __/ _` | __| __/ _ \ `__|| `_ ` _ \ / _` |/ __| `__/ _ \
+	|__   _| | |    | |_ >  <\__ \ (_| (_| | |_| ||  __/ |   | | | | | | (_| | (__| | | (_) |
+	   |_|   |_|     \__/_/\_\___/\___\__,_|\__|\__\___|_|   |_| |_| |_|\__,_|\___|_|  \___/
+	*/
+
+	 / des="Plain Ascii 3d scatter plot using R gglot and ggplotcli"
+
+	%txscatter(
+		 inp=d:/wpswrkx/have.sas7bdat
+		 ,x=wgt
+		 ,y=hgt
+		 ,z=sexage
+		 ,width=5   /*--- inches viewed in notepad courier new 8pt ---*/
+		 ,height=5  /*--- inches viewed in notepad courier new 8pt ---*/
+		 ,png=d:/png/image.png  /*--- leave off for no png plot    ---*/
+		 ,resolve=Y
+		 ,return=status
+		 );
+
+	/**************************************************************************************************************************/
+	/*        ==========================                                                                                      */
+	/*       R WITH SLC MACRO TXSCATTER                                                                                       */
+	/*       ==========================                                                                                       */
+	/*        UTF-8                                                                                                                */ 
+	/*        █▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█                                                               */
+	/*        █                                               █                                                               */
+	/*        █                                           M16 █                                                               */
+	/*   70.0 █                                               █                                                               */
+	/*        █                            M14                █                                                               */
+	/*        █                            ▀                  █                                                               */
+	/*        █                                    M15        █                                                               */
+	/*        █                            M15     ▀          █                                                               */
+	/*   65.0 █                      F13   ▀                  █                                                               */
+	/*        █                   F14▀           M12          █                                                               */
+	/*        █                   ▀    M14       ▀            █                                                               */
+	/* h      █                 M13    F14 F15                █                                                               */
+	/* g      █                 ▀      ▀   ▀                  █                                                               */
+	/* t      █                                               █                                                               */
+	/*   60.0 █                 F12   M12                     █                                                               */
+	/*        █                                               █                                                               */
+	/*        █                MM11                           █                                                               */
+	/*        █              F12F13                           █                                                               */
+	/*        █                                               █                                                               */
+	/*   55.0 █                                               █                                                               */
+	/*        █                                               █                                                               */
+	/*        █                                               █                                                               */
+	/*        █   F11                                         █                                                               */
+	/*        █                                               █                                                               */
+	/*   50.0 █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█                                                               */
+	/*             60.0    80.0      100      120     140                                                                     */
+	/*                              wgt                                                                                       */
+																															  */
+	/*                                                                                                                        */ 
+	/*                                                                                                                        */ 
+	/*       status=STATUS: txscatter completed                                                                               */ 
+	/*                                               WEIGHT                                                                   */ 
+	/*                  60.0     80.0       100      120      140                                                             */
+	/*                                                                                                                        */
+	/*                                                                                                                        */
+	/*               +-----------------------------------------------+                                                        */
+	/*               |                                               |                                                        */
+	/*               |                                           M16 |                                                        */
+	/*          70.0 +                                               +                                                        */
+	/*               |                            M14                |                                                        */
+	/*               |                                               |                                                        */
+	/*               |                                    M15        |                                                        */
+	/*               |                            M15                |                                                        */
+	/*          65.0 +                      F13                      +                                                        */
+	/*               |                   F14            M12          |                                                        */
+	/*               |                        M14                    |                                                        */
+	/*       h       |                 M13    F14 F15                |                                                        */
+	/*       g       |                                               |                                                        */
+	/*       t       |                                               |                                                        */
+	/*          60.0 +                 F12   M12                     +                                                        */
+	/*               |                                               |                                                        */
+	/*               |                MM11                           |                                                        */
+	/*               |              F12F13                           |                                                        */
+	/*               |                                               |                                                        */
+	/*          55.0 +                                               +                                                        */
+	/*               |                                               |                                                        */
+	/*               |                                               |                                                        */
+	/*               |   F11                                         |                                                        */
+	/*               |                                               |                                                        */
+	/*          50.0 +-----------------------------------------------+                                                        */
+	/*                    60.0    80.0      100      120     140                                                              */
+	/*                                     wgt                                                                                */
+	/*     Hand edited                                                                                                        */
+	/*             +--------------------------------------------------+                                                       */
+	/*       H     ¦ PLOT xyz hgt*wgt=sexage ¦                        ¦   H                                                   */
+	/*       E     ¦                       Median                     ¦   E                                                   */
+	/*       I     ¦ hgt  wgt sexage       Weight   Symbol is Sex-Age ¦   I                                                   */
+	/*       G     ¦ 69  112   M14           ¦                        ¦   G                                                   */
+	/*       H     ¦ 56   84   F13           ¦                        ¦   H                                                   */
+	/*       T     ¦ 65   98   F13           |       +---------+      ¦   T                                                   */
+	/*             ¦ 62  102   F14           |       | Mostly  |   M16¦                                                       */
+	/*          70 + 63  102   M14           +       | Males6/3|      + 70                                                    */
+	/*             ¦ 57   83   M12           ¦       +---------+      ¦                                                       */
+	/*             ¦ 59   84   F12           ¦     M14                ¦                                                       */
+	/*             ¦ 62  112   F15           ¦                        ¦                                                       */
+	/*             ¦ 62   84   M13           ¦              M15       ¦                                                       */
+	/*             ¦ 59   99   M12           ¦     M15                ¦                                                       */
+	/*          65 + 51   50   F11         F13                        + 65                                                    */
+	/*             ¦ 64   90   F14      F14  ¦           M12          ¦                                                       */
+	/*             ¦ 56   77   F12           ¦M14                     ¦                                                       */
+	/*       H     ¦ 66--112---F15--- M13----¦F14--F15----------------¦    H                                                  */
+	/*       E     ¦ 72  150   M16           ¦                        ¦    E                                                  */
+	/*       I     ¦ 64  128   M12           ¦                        ¦    I                                                  */
+	/*       G  60 + 67  133   M15    F12   M12                       + 60 G                                                  */
+	/*       H     ¦ 57   85   M11           ¦                        ¦    H                                                  */
+	/*       T     ¦ 66  112   M15           ¦                        ¦    T                                                  */
+	/*             ¦                  M11    ¦                        ¦                                                       */
+	/*             ¦               F12 F13   ¦                        ¦                                                       */
+	/*          55 +        +-----------+    +                        + 55                                                    */
+	/*             ¦        | Mostly    |    ¦                        ¦                                                       */
+	/*             ¦        |Females 6/3|    ¦                        ¦                                                       */
+	/*             ¦        +-----------+    ¦                        ¦                                                       */
+	/*             ¦   F11                 Median                     ¦                                                       */
+	/*             ¦                       Weight                     ¦                                                       */
+	/*          50 +--------------------------------------------------+ 50                                                    */
+	/*                  60.0     80.0       100      120      140                                                             */
+	/*                                     WEIGHT                                                                             */
+	/*                                                                                                                        */
+	/*        ASCII                                                                                                           */
+	/*        PNG plot written to d:/png/image.png                                                                            */
+	/*                                                                                                                        */
+	/*               â–ˆâ–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–                                           */
+	/*               â–ˆ                                               â–ˆ                                                    */
+	/*               â–ˆ                                           M16 â–ˆ                                                    */
+	/*          70.0 â–ˆ                                               â–ˆ                                                    */
+	/*               â–ˆ                            M14                â–ˆ                                                    */
+	/*               â–ˆ                            â–€                  â–ˆ                                                  */
+	/*               â–ˆ                                    M15        â–ˆ                                                    */
+	/*               â–ˆ                            M15     â–€          â–ˆ                                                  */
+	/*          65.0 â–ˆ                      F13   â–€                  â–ˆ                                                  */
+	/*               â–ˆ                   F14â–€           M12          â–ˆ                                                  */
+	/*               â–ˆ                   â–€    M14       â–€            â–ˆ                                                */
+	/*        h      â–ˆ                 M13    F14 F15                â–ˆ                                                    */
+	/*        g      â–ˆ                 â–€      â–€   â–€                  â–ˆ                                              */
+	/*        t      â–ˆ                                               â–ˆ                                                    */
+	/*          60.0 â–ˆ                 F12   M12                     â–ˆ                                                    */
+	/*               â–ˆ                                               â–ˆ                                                    */
+	/*               â–ˆ                MM11                           â–ˆ                                                    */
+	/*               â–ˆ              F12F13                           â–ˆ                                                    */
+	/*               â–ˆ                                               â–ˆ                                                    */
+	/*          55.0 â–ˆ                                               â–ˆ                                                    */
+	/*               â–ˆ                                               â–ˆ                                                    */
+	/*               â–ˆ                                               â–ˆ                                                    */
+	/*               â–ˆ   F11                                         â–ˆ                                                    */
+	/*               â–ˆ                                               â–ˆ                                                    */
+	/*          50.0 â–ˆâ–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–                                           */
+	/*                    60.0    80.0      100      120     140                                                              */
+	/*                                     wgt                                                                                */
+	/**************************************************************************************************************************/
+
+	/*
+	| | ___   __ _
+	| |/ _ \ / _` |
+	| | (_) | (_| |
+	|_|\___/ \__, |
+			 |___/
+	*/
+
+	1                                          Altair SLC         10:32 Saturday, July 25, 2026
+
+	NOTE: Copyright 2002-2025 World Programming, an Altair Company
+	NOTE: Altair SLC 2026 (05.26.01.00.000758)
+		  Licensed to Roger DeAngelis
+	NOTE: This session is executing on the X64_WIN11PRO platform and is running in 64 bit mode
+
+	NOTE: AUTOEXEC processing beginning; file is C:\wpsoto\autoexec.sas
+	NOTE: Library workx assigned as follows:
+		  Engine:        SAS7BDAT
+		  Physical Name: d:\wpswrkx
+
+	NOTE: Library wpdx assigned as follows:
+		  Engine:        WPD
+		  Physical Name: d:\wpswrkx
+
+	NOTE: Library slchelp assigned as follows:
+		  Engine:        WPD
+		  Physical Name: C:\Progra~1\Altair\SLC\2026\sashelp
+
+
+	LOG:  10:32:45
+	NOTE: 1 record was written to file PRINT
+
+	NOTE: The data step took :
+		  real time : 0.025
+		  cpu time  : 0.000
+
+
+	NOTE: Format num2mis output
+	NOTE: Format $chr2mis output
+	NOTE: Procedure format step took :
+		  real time : 0.015
+		  cpu time  : 0.000
+
+
+	NOTE: AUTOEXEC processing completed
+
+	1         %txscatter(
+	2              inp=d:/wpswrkx/have.sas7bdat
+	3              ,x=wgt
+	4              ,y=hgt
+	5              ,z=sexage
+	6              ,resolve=Y
+	7              ,width=5   /*--- inches viewed in notepad courier new 8pt ---*/
+	8              ,height=5  /*--- inches viewed in notepad courier new 8pt ---*/
+	9              ,png=d:/png/image.png
+	10             ,return=status
+	11             ) ;
+
+	NOTE: 12 records were written to file PRINT
+
+	NOTE: The data step took :
+		  real time : 0.047
+		  cpu time  : 0.000
+
+	NOTE: The file _clp is:
+		  Clipboard
+
+	NOTE: 1 record was written to file _clp
+		  The minimum record length was 1
+		  The maximum record length was 1
+	NOTE: The data step took :
+		  real time : 0.000
+		  cpu time  : 0.000
+
+	NOTE: The file r_pgm is:
+		  Filename='c:\temp\r_pgm.txt',
+		  Owner Name=SLC\suzie,
+		  File size (bytes)=0,
+		  Create Time=12:56:35 Jul 22 2026,
+		  Last Accessed=10:32:44 Jul 25 2026,
+		  Last Modified=10:32:44 Jul 25 2026,
+		  Lrecl=32766, Recfm=V
+
+	NOTE: 80 records were written to file r_pgm
+		  The minimum record length was 1
+		  The maximum record length was 85
+	NOTE: The data step took :
+		  real time : 0.000
+		  cpu time  : 0.000
+
+	NOTE: The infile rut is:
+		  Unnamed Pipe Access Device,
+		  Process=C:\Progra~1\R\R-4.5.2\bin\r.exe --vanilla --quiet --no-save < c:\temp\r_pgm.txt,
+		  Lrecl=32756, Recfm=V
+
+	NOTE: 60 records were written to file PRINT
+
+	NOTE: 60 records were read from file rut
+		  The minimum record length was 0
+		  The maximum record length was 156
+	Stderr output:
+	Warning messages:
+	1: package 'plotcli' was built under R version 4.5.3
+	2: package 'ggplot2' was built under R version 4.5.3
+	3: package 'ggrepel' was built under R version 4.5.3
+	Warning message:
+	In sink() : no sink to remove
+	NOTE: The data step took :
+		  real time : 2.520
+		  cpu time  : 0.015
+
+
+
+	NOTE: The infile clp is:
+		  Clipboard
+
+	macro variable status = STATUS: txscatter completed
+	NOTE: 1 record was read from file clp
+		  The minimum record length was 27
+		  The maximum record length was 27
+	NOTE: The data step took :
+		  real time : 0.000
+		  cpu time  : 0.000
+
+
+	12
+	13        %put &=status;
+	status=STATUS: txscatter completed
+
+	NOTE: Submitted statements took :
+		  real time : 2.806
+		  cpu time  : 0.125
+
+	/*___                                   _                      _   _
+	| ___|  _ __ ___   __ _  ___ _ __ ___  | |___  _____  ___ __ _| |_| |_ ___ _ __
+	|___ \ | `_ ` _ \ / _` |/ __| `__/ _ \ | __\ \/ / __|/ __/ _` | __| __/ _ \ `__|
+	 ___)  | | | | | | (_| | (__| | | (_) || |_ >  <\__ \ (_| (_| | |_| ||  __/ |
+	|____/ |_| |_| |_|\__,_|\___|_|  \___/  \__/_/\_\___/\___\__,_|\__|\__\___|_|
+	*/
+
+	data _null_;
+	 file "c:/wpsoto/txscatter.sas";
+	 input;
+	 put _infile_;
+	cards4;
+	%macro txscatter(
+		 inp=d:/wpswrkx/have.sas7bdat
+		 ,x=wgt
+		 ,y=hgt
+		 ,z=sexage
+		 ,width=5       /*--- x axis inches viewed in notepad courier new 8pt ---*/
+		 ,height=5      /*--- y axis inches viewed in notepad courier new 8pt ---*/
+		 ,png=N         /*--- Default N or specify path d:/png/txt.png        ---*/
+		 ,resolve=Y     /*--- Default Y or N/n to resolve macro variables     ---*/
+		 ,return=N      /*--- Deault=N or SLC variable name                   ---*/
+		 ) /
+		 des="Plain Ascii 3d scatter plot using R gglot and ggplotcli";
+
+		%local res;
+
+		data _null_;
+		   file print;
+		   put 'Sample Call                                                              ';
+		   put '% tscatter(                                                              ';
+		   put '   inp=d:/wpswrkx/have.sas7bdat                                          ';
+		   put '   ,x=wgt         x axis column variable                                 ';
+		   put '   ,y=hgt         y axis column variable                                 ';
+		   put '   ,z=sexage      z axis column variable                                 ';
+		   put '   ,width=5       y axis length inches viewed in notepad courier new 8pt ';
+		   put '   ,height=5      y axis length inches viewed in notepad courier new 8pt ';
+		   put '   ,png=N         Default N or specify path d:/png/txt.png               ';
+		   put '   ,resolve=Y     Default Y or N/n to resolve macro variables            ';
+		   put '   ,return=N      Deault=N or SLC variable name                          ';
+		   put '   )                                                                     ';
+		run;
+
+		%put %sysfunc(ifc(%sysevalf(%superq(inp )=,boolean)
+		 ,**** Please provide inp dataset: ie d:/wpswrkx/have.sas7bdat ****,));
+		%put %sysfunc(ifc(%sysevalf(%superq(x )=,boolean)
+		 ,**** Please provide xaxis dataset column name ie x=width ****,));
+		%put %sysfunc(ifc(%sysevalf(%superq(y )=,boolean)
+		 ,**** Please provide yaxis dataset column name ie x=width ****,));
+		%put %sysfunc(ifc(%sysevalf(%superq(z )=,boolean)
+		 ,**** Please provide zaxis dataset column name ie x=width ****,));
+
+		%let res= %eval
+		 (
+			 %sysfunc(ifc(%sysevalf(%superq(inp )=,boolean),1,0))
+		   + %sysfunc(ifc(%sysevalf(%superq(x )=,boolean),1,0))
+		   + %sysfunc(ifc(%sysevalf(%superq(y )=,boolean),1,0))
+		   + %sysfunc(ifc(%sysevalf(%superq(z )=,boolean),1,0))
+		 );
+
+		 %if &res = 0 %then %do;
+
+			%utlfkil(&png); /*--- WILL TEST IF N EXISTS AND DELETE IF IT DOES ---*/
+
+			/*--- CONVERT INCHES TO PTS NEEDED FOR PLOT SIZE                  ---*/
+			%let xpts = %sysfunc(int(%sysevalf(7.5 + 10*&width)));
+			%let ypts = %sysfunc(int(%sysevalf(3.75 + 5*&height)));
+
+			options validvarname=v7;
+
+			 %slc_submit_r64x('
+
+				options(echo=FALSE)                                                                    ;
+				# DO NOT ECHO R COMMANDS TO LIST OUTPUT                                                ;
+																									   ;
+				# DO NOT USE SINGLE QUOTES IN YOUR R CODE. DOUBLE AND BACTIC QUOTES CAN BE USED        ;
+				# ALL R LINES MUST END IN A SEMI-COLIN. EVEN WHEN CONTINUAING A LINE                   ;
+				#     txscatter(...,resolve=Y)                                                         ;
+				# MACRO ARGUMENT RESOLVE=Y WILL RESOLVE MACRO CALLS AND MACRO VARIABLES IN THE R CODE  ;
+				# TO RETURN MACRO VARIABLES BUILTIN WRITECLIPBOARD FUNCTION                            ;
+				#      writeClipboard("Hello, clipboard!")                                             ;
+				#      txscatter(...,return=hello)                                                     ;
+				#      put & hello                                                                     ;
+				#      Hello, clipboard!                                                               ;
+																									   ;
+				# SUPPRESS INSTALL MESSAGES                                                            ;
+				options(show.error.messages = FALSE)                                                   ;
+				suppressPackageStartupMessages({                                                       ;
+				  library(plotcli)                                                                     ;
+				  library(ggplot2)                                                                     ;
+				  library(ggrepel)                                                                     ;
+				  library(haven)                                                                       ;
+				})                                                                                     ;
+																									   ;
+				 # CREATE R DATAFRAME FROM SLC DATASET                                                 ;
+				 dfsas<-read_sas("&inp")                                                               ;
+																									   ;
+				 # CREATE SIMPLE PNG PLOT - SUGGEST YOU DO NOT CHANGE                                  ;
+				 p <- ggplot(data = dfsas, aes(x = &x, y = &y, label = &z)) +                          ;
+				   geom_point(color = "steelblue", size = 3) +                                         ;
+				   geom_text(vjust = -0.8, size = 3, check_overlap = TRUE) +                           ;
+				   theme_bw()                                                                          ;
+																									   ;
+				 # SAVE PLOT WHEN MACRO ARGUMENT PNG IS A PATH                                         ;
+				 if ("%upcase(&png)" !="N") {                                                          ;
+					png("&png", width = 800, height = 600)                                             ;
+					print(p)                                                                           ;
+					dev.off()                                                                          ;
+					cat("PNG plot written to &png\n")                                                  ;
+				 }                                                                                     ;
+																									   ;
+				 # CREATE TEXT IMAGE OF PNG PLOT                                                       ;
+				 temp_file <- tempfile(fileext = ".txt")                                               ;
+				 sink(temp_file)                                                                       ;
+				 # BLOCK ASCII AND BRAILLE ARE AVAILABLE - BRAILLE HAS HIGHER RESOLUTION               ;
+				 # I PREFER SIMPLE ASCII TO AVOID EDITORS THAT ARE NOT UTF-8                           ;
+				 ggplotcli(p, width =&xpts, height = &ypts, canvas_type = "block")                     ;
+				 sink()                                                                                ;
+																									   ;
+				 # SEND THE UTF-8 TEXT IMAGE TO LIST OUTPUT                                            ;
+				 lines <- readLines(temp_file)                                                         ;
+				 sink(stdout())                                                                        ;
+					 writeLines(lines)                                                                 ;
+				 sink()                                                                                ;
+																									   ;
+				 # REMOVE FIRST CHARACTER COLUMN WHICH HAS THE  LABEL TO MAKE EDITING MUCH SIMPLER     ;
+				 col1 <- substr(lines, 1, 1)                                                           ;
+				 lines <- substr(lines, 2, nchar(lines))                                               ;
+																									   ;
+				 # CHANGE UPPER AND LOWER HALF BLOCKS TO - DASH                                        ;
+				 lines <- gsub("\U2580", "-", lines, fixed = TRUE)                                     ;
+				 lines <- gsub("\U2584", "-", lines, fixed = TRUE)                                     ;
+																									   ;
+				 # IF AT A MAJOR Y AXIS TICK. CHANGE | TO + OTHERWISE NO CHANGE                        ;
+				 lines <- ifelse(                                                                      ;
+				   grepl("^\\s*[\U2588]", lines),                                                      ;
+				   gsub("[\U2588]", "|", lines),                                                       ;
+				   gsub("[\U2588]", "+", lines))                                                       ;
+																									   ;
+				 # REMOVE DASHES IN THE PLOT AREA                                                      ;
+				 lines <- gsub(" -", "  ", lines, fixed = TRUE)                                        ;
+				 lines <- gsub("- ", "  ", lines, fixed = TRUE)                                        ;
+				 lines <- gsub("- ", "  ", lines, fixed = TRUE)                                        ;
+																									   ;
+				 # CHANGE | TO + IN THE FIRST LINE                                                     ;
+				 lines[1] <- gsub("|", "+", lines[1], fixed = TRUE)                                    ;
+				 lines[2] <- gsub("|", "+", lines[2], fixed = TRUE)                                    ;
+				 # BRING Y AXIS LABEL BACK                                                             ;
+				 lines <- paste(col1, lines)                                                           ;
+				 cat(lines, sep = "\n", file = stdout())                                               ;
+				 if ("%upcase(&return)" !="N") {                                                       ;
+					 writeClipboard("STATUS: txscatter completed") }                                   ;
+			 ',resolve=&resolve
+			  ,return=&return
+			   );
+		 %end; /*-- end run check ---*/
+
+	%mend txscatter;
+	;;;;
+	run;
+
+	/*__                      _               _ _
+	 / /_    _ __   ___ _   _| |__  _ __ ___ (_) |_  _ __ ___   __ _  ___ _ __ ___
+	| `_ \  | `__| / __| | | | `_ \| `_ ` _ \| | __|| `_ ` _ \ / _` |/ __| `__/ _ \
+	| (_) | | |    \__ \ |_| | |_) | | | | | | | |_ | | | | | | (_| | (__| | | (_) |
+	 \___/  |_|    |___/\__,_|_.__/|_| |_| |_|_|\__||_| |_| |_|\__,_|\___|_|  \___/
+
+	*/
+
+	data _null_;
+	  file "c:/wpsoto/slc_submit_r64x.sas";
+	  input;
+	  put _infile_;
+	cards4;
+	%macro slc_submit_r64x(
+		  pgmx
+		 ,return=N
+		 ,resolve=N
+		 )/des="Semi colon separated set of R commands - drop down to R";
+
+	  /*--- ONLY USE DOUBLE QUOTES AND BACTICS INSIDE THIS MACRO                             ---*/
+
+	  /*--- THIS DROP DOWN SUPPORTS THREE QUOTES, SINGLE QUOTE, DOUBLE QUOTE AND BACTIC      ---*/
+	  /*--- YOU CAN RESOLVE DOUBLE QUOTED MACRO VARIABLES INSIDE SINGLE QUOTES USING BACTIC  ---*/
+	  /*--- THE MACRO VARIABLE INSIDE THE R PROGRAM, AREA<-'&RADIUS', CAN BE RESOLVED        ---*/
+	  /*--- THE NOTEPAD CLIPBOARD IS USE TO PASS MACRO CREATE DBY R BACK TO THE DATASTEP     ---*/
+
+	  %utlfkil(c:\temp\r_pgm.txt);
+
+	  * clear clipboard;
+	  filename _clp clipbrd;
+	  data _null_;
+		file _clp;
+		put " ";
+	  run;quit;
+	  * WRITE THE PROGRAM TO A TEMPORARY FILE AND LOG;
+	  filename r_pgm "c:\temp\r_pgm.txt" lrecl=32766 recfm=v;
+	  data _null_;
+		length pgm $32756 cmd $255;
+		file r_pgm;
+		if substr(upcase("&resolve"),1,1)="Y" then do;
+			pgm=resolve(&pgmx);
+		 end;
+		else do;
+			pgm=&pgmx;
+		end;
+		if index(pgm,"`") then pgm=resolve(tranwrd(pgm,"`","27"x));
+		semi=countc(pgm,";");
+		do idx=1 to semi;
+		  cmd=cats(scan(pgm,idx,";"));
+		  len=length(cmd);
+		  put cmd $varying255. len;
+		end;
+	  run;
+	  * PIPE FILE THROUGH R;
+	  filename rut pipe "C:\Progra~1\R\R-4.5.2\bin\r.exe --vanilla --quiet --no-save < c:\temp\r_pgm.txt";
+	  data _null_;
+		file print;
+		infile rut recfm=v lrecl=32756;
+		input;
+		put _infile_;
+	  run;
+	  filename rut clear;
+	  filename r_pgm clear;
+	  * USE THE CLIPBOARD TO CREATE MACRO VARIABLE;
+	  %if %upcase(%substr(&return.,1,1)) ne N %then %do;
+		filename clp clipbrd ;
+		data _null_;
+		 infile clp;
+		 input;
+		 putlog "macro variable &return = " _infile_;
+		 call symputx("&return.",_infile_,"G");
+		run;quit;
+	  %end;
+	%mend slc_submit_r64x;
+	;;;;
+	run;
+
+	/*              _
+	  ___ _ __   __| |
+	 / _ \ `_ \ / _` |
+	|  __/ | | | (_| |
+	 \___|_| |_|\__,_|
+
+	*/
